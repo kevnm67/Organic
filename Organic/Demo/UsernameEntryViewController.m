@@ -10,6 +10,8 @@
 #import "TextFieldCell.h"
 #import "GitUserProfileViewController.h"
 
+#import "KJMDataModificationExample.h"
+
 @interface UsernameEntryViewController () {
     TextFieldCell *_usernameCell;
 }
@@ -18,23 +20,27 @@
 
 @implementation UsernameEntryViewController
 
-- (instancetype)init {
+- (instancetype)init
+{
     return [super initWithStyle:UITableViewStyleGrouped];
 }
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
+    
+    self.navigationController.topViewController.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Demo VC" style:UIBarButtonItemStylePlain target:self action:@selector(presentDynamicDemoViewController)];
     
     self.title = @"Demo";
     
     UIImageView *gitBannerImageView = [[UIImageView alloc] initWithFrame:CGRectMake(CGRectGetMidX(self.view.frame) - 100, 15, 200, 40)];
     gitBannerImageView.contentMode = UIViewContentModeScaleAspectFit;
-    gitBannerImageView.image = [UIImage imageNamed:@"gitBanner"];
+    gitBannerImageView.image       = [UIImage imageNamed:@"gitBanner"];
     
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), CGRectGetMaxY(gitBannerImageView.frame) + 15)];
     [headerView addSubview:gitBannerImageView];
     
-    _usernameCell = [TextFieldCell new];
+    _usernameCell                       = [TextFieldCell new];
     _usernameCell.textField.placeholder = @"GitHub User";
     
     OrganicSection *usernameSection = [OrganicSection sectionWithHeaderView:headerView headerHeight:CGRectGetHeight(headerView.frame) cells:@[_usernameCell]];
@@ -47,24 +53,35 @@
             [[[UIAlertView alloc] initWithTitle:@"Whoops!" message:@"Please enter a GitHub username" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
             
             [_usernameCell.textField becomeFirstResponder];
-        }
-        
-        else {
+        } else {
             [weakSelf viewProfileForUser:enteredUsername];
         }
     }];
-    loginButtonCell.textLabel.text = @"View Profile For User";
+    loginButtonCell.textLabel.text          = @"View Profile For User";
     loginButtonCell.textLabel.textAlignment = NSTextAlignmentCenter;
-    loginButtonCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    loginButtonCell.accessoryType           = UITableViewCellAccessoryDisclosureIndicator;
     
     OrganicSection *loginButtonSection = [OrganicSection sectionWithCells:@[loginButtonCell]];
     
     self.sections = @[usernameSection, loginButtonSection];
 }
 
-- (void)viewProfileForUser:(NSString *)user {
+- (void)viewProfileForUser:(NSString *)user
+{
     GitUserProfileViewController *demoVC = [[GitUserProfileViewController alloc] initWithGitUser:user];
     [self.navigationController pushViewController:demoVC animated:YES];
+}
+
+- (void)presentDynamicDemoViewController
+{
+    UIBarButtonItem *dismissBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+                                                                                          target:self
+                                                                                          action:@selector(dismissModalViewControllerAnimated:)];
+                                                                                          
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:[KJMDataModificationExample new]];
+    navController.topViewController.navigationItem.leftBarButtonItem = dismissBarButtonItem;
+    
+    [self presentViewController:navController animated:TRUE completion:NULL];
 }
 
 @end

@@ -22,7 +22,8 @@
 
 @implementation GitUserProfileViewController
 
-- (instancetype)initWithGitUser:(NSString *)gitUser {
+- (instancetype)initWithGitUser:(NSString *)gitUser
+{
     self = [super initWithStyle:UITableViewStyleGrouped];
     
     if (!self) {
@@ -34,7 +35,8 @@
     return self;
 }
 
-- (void)viewWillAppear:(BOOL)animated {
+- (void)viewWillAppear:(BOOL)animated
+{
     [super viewWillAppear:animated];
     
     [SVProgressHUD show];
@@ -63,7 +65,6 @@
             repoCell.repoDictionary = repos[row];
             
             return repoCell;
-            
         } actionBlock:^(NSInteger row) {
             NSDictionary *repoDict = repos[row];
             NSString *message = [NSString stringWithFormat:@"You just tapped on the cell for %@", repoDict[@"name"]];
